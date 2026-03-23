@@ -324,7 +324,7 @@ chat_result = subprocess.run(
 print(chat_result.stdout)
 
 # 2. 调用 RVC 变声（根据上一步输出的文件路径）
-# 假设上一步输出到 E:\tts_output\ChatTTS\chattts_raw_xxx.wav
+# 假设上一步输出到 <repo_root>/tts_output/ChatTTS/chattts_raw_xxx.wav
 chat_output_wav = "...(从上一个命令输出中提取文件路径)..."
 
 rvc_result = subprocess.run(
