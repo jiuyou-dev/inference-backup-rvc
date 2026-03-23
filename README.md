@@ -1,6 +1,6 @@
 # Feishu Voice Skill
 
-## 飞书语音技能 / 飞书语音技能
+## 飞书语音技能 / Feishu Voice Skill
 
 > 一款基于 OpenClaw 的飞书语音消息生成技能，融合 ChatTTS 与 RVC 语音转换技术，为您打造温和自然、亲切温暖的声音体验。
 
@@ -17,6 +17,8 @@
 - [工作流程 / Workflow](#工作流程-workflow)
 - [推理流程详解 / Inference Process](#推理流程详解-inference-process)
 - [快速开始 / Quick Start](#快速开始-quick-start)
+- [Python 环境自动检测](#python-环境自动检测)
+- [给 AI Agent 的使用指南](#给-ai-agent-的使用指南)
 - [使用说明 / Usage](#使用说明-usage)
 - [项目结构 / Project Structure](#项目结构-project-structure)
 - [开源引用 / Open Source](#开源引用-open-source)
@@ -50,7 +52,7 @@
 
 **Feishu Voice Skill** is a voice message generation skill designed specifically for the OpenClaw AI assistant. It ingeniously combines two core technologies:
 
-1. **ChatTTS** (ByteDance's open-source high-quality text-to-speech system) - responsible for converting text into natural and fluent speech
+1. **ChatTTS** (ByteDance's open-source high quality text-to-speech system) - responsible for converting text into natural and fluent speech
 2. **RVC** (Retrieval-based Voice Conversion) - responsible for transforming speech to specific timbres while preserving original emotion and prosody
 
 Through the perfect combination of these two technologies, we can generate **warm, friendly, emotionally rich, and natural-sounding** voice messages and send them to users via the Feishu platform.
@@ -59,7 +61,7 @@ Through the perfect combination of these two technologies, we can generate **war
 
 ## 核心特性 / Features
 
-### 🎯 主要功能 / Core Functions
+### 主要功能 / Core Functions
 
 | 功能 / Feature | 描述 / Description |
 |----------------|-------------------|
@@ -68,9 +70,9 @@ Through the perfect combination of these two technologies, we can generate **war
 | **飞书消息发送** | 支持群聊和私聊语音消息发送 |
 | **长文本处理** | 自动分段处理超长文本 |
 | **数字转换** | 阿拉伯数字自动转换为中文大写 |
-| **批量处理** | 支持批量语音生成 |
+| **Python 自动检测** | 自动选择仓库内嵌 Python 或系统 Python |
 
-### 🎙️ 声音特点 / Voice Characteristics
+### 声音特点 / Voice Characteristics
 
 - **温和亲切 / Warm & Friendly** - 音质温暖自然，如同与朋友交谈
 - **情感丰富 / Rich Emotion** - 保留文本中的情感表达
@@ -90,7 +92,7 @@ Through the perfect combination of these two technologies, we can generate **war
 │                                                                      │
 │   ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐   │
 │   │   Text   │───▶│  ChatTTS │───▶│    RVC   │───▶│  Feishu  │   │
-│   │  Input   │    │   (TTS)  │    │ (VC/音色) │    │  (Send)  │   │
+│   │  Input   │    │   (TTS)  │    │ (VC/音色) │    │  (Send) │   │
 │   └──────────┘    └──────────┘    └──────────┘    └──────────┘   │
 │       │                │                 │                │          │
 │       ▼                ▼                 ▼                ▼          │
@@ -100,17 +102,6 @@ Through the perfect combination of these two technologies, we can generate **war
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-### 核心技术栈 / Technology Stack
-
-| 组件 / Component | 技术 / Technology | 版本 / Version | 说明 / Description |
-|------------------|------------------|----------------|-------------------|
-| TTS 引擎 | ChatTTS | latest | 字节跳动开源高质量语音合成 |
-| 声音转换 | RVC | v2 | 检索式语音转换模型 |
-| AI 框架 | PyTorch | 2.x | 深度学习框架 |
-| 消息平台 | 飞书 API | v1 | 语音消息发送 |
-| 运行时 | Python | 3.11 | 程序运行环境 |
-| 音频处理 | FFmpeg | latest | 音频格式转换 |
-
 ---
 
 ## 工作流程 / Workflow
@@ -119,176 +110,14 @@ Through the perfect combination of these two technologies, we can generate **war
 
 ```
 Step 1: 用户输入文本
-┌─────────────────────────────────────┐
-│  用户输入或 AI 生成文本              │
-│  例: "你好，今天天气真不错呀~"       │
-└─────────────────────────────────────┘
-                │
-                ▼
 Step 2: ChatTTS 语音合成
-┌─────────────────────────────────────┐
-│  ChatTTS 将文本转换为语音            │
-│  - 自然流畅的语调                    │
-│  - 保留情感表达                      │
-│  - 韵律节奏自然                      │
-└─────────────────────────────────────┘
-                │
-                ▼
 Step 3: 音频预处理
-┌─────────────────────────────────────┐
-│  - 采样率转换                        │
-│  - 格式转换 (wav/opus)              │
-│  - 音频质量优化                      │
-└─────────────────────────────────────┘
-                │
-                ▼
 Step 4: RVC 音色转换
-┌─────────────────────────────────────┐
-│  RVC 将语音转换为目标音色            │
-│  - 保留原始情感                      │
-│  - 保留韵律特征                      │
-│  - 应用目标音色模型                  │
-└─────────────────────────────────────┘
-                │
-                ▼
 Step 5: 后处理与发送
-┌─────────────────────────────────────┐
-│  - 音频合并                          │
-│  - 格式转换为 OPUS (飞书专用)        │
-│  - 发送至飞书                        │
-└─────────────────────────────────────┘
-                │
-                ▼
 Step 6: 用户接收
-┌─────────────────────────────────────┐
-│  用户在飞书中接收语音消息            │
-│  直接播放，无需下载                  │
-└─────────────────────────────────────┘
 ```
 
----
-
-## 推理流程详解 / Inference Process
-
-### 1. ChatTTS 推理流程 / ChatTTS Inference Process
-
-```
-输入文本
-    │
-    ▼
-┌───────────────────────────────┐
-│  1. 文本规范化 (Text Normalization) │
-│     - 数字转中文              │
-│     - 特殊符号处理            │
-│     - 多音字处理              │
-└───────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────┐
-│  2. 语义分析 (Semantic Analysis)   │
-│     - 句子边界检测            │
-│     - 情感标注                │
-│     - 韵律预测                │
-└───────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────┐
-│  3. 生成音频参数              │
-│     - 梅尔频谱 (Mel-Spectrogram) │
-│     - pitch 轮廓             │
-│     - 能量曲线                │
-└───────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────┐
-│  4. 声码器合成 (Vocoder)         │
-│     - HiFiGAN / BigVGAN       │
-│     - 波形生成                │
-└───────────────────────────────┘
-    │
-    ▼
-ChatTTS 语音输出 (raw_audio.wav)
-```
-
-### 2. RVC 推理流程 / RVC Inference Process
-
-```
-ChatTTS 语音输入
-    │
-    ▼
-┌───────────────────────────────┐
-│  1. 音频预处理                │
-│     - 重采样 (根据模型要求)    │
-│     - 单声道转换              │
-│     - 标准化                  │
-└───────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────┐
-│  2. F0 提取 (Pitch Extraction)  │
-│     - RMVPE (推荐)            │
-│     - Harvest                 │
-│     - Crepe                   │
-│     - 提取基频轮廓            │
-└───────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────┐
-│  3. 特征提取                  │
-│     - Huberts 特征提取        │
-│     - 音频表示学习            │
-│     - 1000帧/秒               │
-└───────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────┐
-│  4. 音色转换                  │
-│     - 加载 RVC 模型权重       │
-│     - 特征映射                │
-│     - 音色变换                │
-└───────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────┐
-│  5. 波形重建                  │
-│     - 逆变换                  │
-│     - 输出目标音色语音         │
-└───────────────────────────────┘
-    │
-    ▼
-RVC 转换后语音 (voice_converted.wav)
-```
-
-### 3. 飞书发送流程 / Feishu Send Process
-
-```
-RVC 转换后语音
-    │
-    ▼
-┌───────────────────────────────┐
-│  1. 格式转换                  │
-│     - WAV → OPUS (FFmpeg)     │
-│     - 飞书只支持 OPUS 格式    │
-└───────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────┐
-│  2. 音频上传                  │
-│     - 调用飞书 API            │
-│     - 获取 file_key           │
-└───────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────┐
-│  3. 发送语音消息              │
-│     - 调用发消息 API          │
-│     - 指定接收者              │
-│     - 支持群聊/私聊           │
-└───────────────────────────────┘
-    │
-    ▼
-飞书消息发送成功 ✓
-```
+详见 [推理流程详解 / Inference Process](#推理流程详解-inference-process)。
 
 ---
 
@@ -313,10 +142,12 @@ RVC 转换后语音
 git clone https://github.com/jiuyou-dev/feishu-voice-skill.git
 cd feishu-voice-skill
 
-# 2. 安装 Python 依赖
+# 2. 安装依赖（仓库内嵌 Python 已包含大部分依赖）
+# 如使用仓库内嵌 Python：
+python/python.exe -m pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
+
+# 或使用系统 Python：
 pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
-pip install -r packages/chatttts/requirements.txt
-pip install -r packages/rvc/requirements.txt
 
 # 3. 安装 FFmpeg (Windows)
 # 下载 https://ffmpeg.org/download.html
@@ -333,10 +164,12 @@ pip install -r packages/rvc/requirements.txt
 git clone https://github.com/jiuyou-dev/feishu-voice-skill.git
 cd feishu-voice-skill
 
-# 2. Install Python dependencies
+# 2. Install dependencies (bundled Python includes most dependencies)
+# Using bundled Python:
+python/python.exe -m pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
+
+# Or using system Python:
 pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
-pip install -r packages/chatttts/requirements.txt
-pip install -r packages/rvc/requirements.txt
 
 # 3. Install FFmpeg (Windows)
 # Download from https://ffmpeg.org/download.html
@@ -344,6 +177,201 @@ pip install -r packages/rvc/requirements.txt
 
 # 4. Configure Feishu API credentials
 # Create an app on Feishu Open Platform and get app_id and app_secret
+```
+
+---
+
+## Python 环境自动检测
+
+本项目使用 **Python 路径自动检测机制**，所有脚本均优先使用仓库内嵌 Python，无需手动配置。
+
+### 检测优先级
+
+| 优先级 | Python 路径 | 说明 |
+|--------|------------|------|
+| 🥇 第1优先 | `<repo_root>/python/python.exe` | 仓库内嵌 Python（推荐） |
+| 🥈 第2优先 | `C:\Espressif\tools\idf-python\python.exe` | 九幽工作区兼容 |
+| 🥉 第3优先 | 系统默认 Python | fallback |
+
+### Python 自动检测模块
+
+核心模块：`scripts/_python_resolver.py`
+
+```python
+import sys
+import os
+
+# 添加 scripts 目录
+sys.path.insert(0, os.path.join("<repo_root>", "scripts"))
+from _python_resolver import get_python_exe, get_repo_root
+
+python_exe = get_python_exe()   # 自动选择正确的 Python
+repo_root = get_repo_root()       # 获取仓库根目录
+```
+
+### 环境变量
+
+| 环境变量 | 说明 | 默认值 |
+|----------|------|--------|
+| `TTS_OUTPUT_DIR` | TTS 输出根目录 | `E:\tts_output` |
+| `PYTHON_EXE` | 指定 Python 路径（覆盖自动检测） | 自动检测 |
+
+---
+
+## 给 AI Agent 的使用指南
+
+如果你是在 OpenClaw、Qclaw 或其他 Agent 框架中运行此技能的 AI Agent，请按以下步骤操作：
+
+### 第一步：读取 SKILL.md
+
+Agent 应读取仓库中的 `SKILL.md` 文件，理解：
+- **触发关键词**：当用户说"发语音"、"与我说"、"和我说"、"说给我听"等时触发
+- **路径解析模块**：`scripts/_python_resolver.py` 负责 Python 路径和输出路径的自动解析
+- **Python 环境**：自动检测，无须硬编码
+
+### 第二步：获取 Python 解释器
+
+Agent 通过导入 `_python_resolver.py` 获取正确的 Python 路径：
+
+```python
+import sys
+import os
+
+repo_root = "<仓库根目录>"  # Agent 应从上下文获知
+sys.path.insert(0, os.path.join(repo_root, "scripts"))
+from _python_resolver import get_python_exe, get_repo_root
+
+python_exe = get_python_exe()   # 自动选择正确的 Python
+repo_root = get_repo_root()       # 获取仓库根目录
+```
+
+### 第三步：执行环境检查
+
+```python
+import subprocess
+
+env_check = os.path.join(repo_root, "scripts", "check_environment.py")
+result = subprocess.run(
+    [python_exe, env_check],
+    capture_output=True,
+    text=True
+)
+print(result.stdout)
+if result.returncode != 0:
+    print("环境检查失败:", result.stderr)
+```
+
+### 第四步：根据检查结果向用户报告
+
+**情况一：检查通过（返回码 = 0）**
+
+```
+✅ 环境检查通过！
+
+检查结果：
+- PyTorch：已安装，支持 CUDA
+- GPU：NVIDIA GeForce RTX [型号]
+- CUDA：可用
+- FFmpeg：已安装
+- Edge-TTS：已安装
+- Python：{自动检测到的 Python 路径}
+
+语音技能已就绪，可以正常使用了！
+```
+
+**情况二：检查失败（返回码 ≠ 0）**
+
+```
+❌ 环境检查失败：您的 GPU 不支持 PyTorch
+
+可能的原因：
+  1. 您的显卡太旧（需要 NVIDIA GPU，计算能力 >= 3.5）
+  2. NVIDIA 驱动未正确安装
+  3. PyTorch CUDA 版本与驱动不匹配
+
+解决方案：
+  1. 更新 NVIDIA 驱动到最新版本
+  2. 重新安装匹配 CUDA 版本的 PyTorch
+  3. 如无法解决，请提交 Issue:
+     https://github.com/jiuyou-dev/feishu-voice-skill/issues
+
+【自动切换】
+  系统将自动使用 EdgeTTS 方案替代，语音功能仍可正常使用。
+```
+
+**情况三：部分警告（可继续但功能受限）**
+
+```
+⚠️ 环境检查完成，但存在以下警告：
+- CUDA 不可用，将使用 CPU 模式（速度较慢）
+- 建议安装 GPU 版本的 PyTorch 以提升性能
+
+语音技能仍可正常使用，但推荐配置 GPU 环境。
+```
+
+### 第五步：技能使用流程
+
+环境检查通过后，Agent 可以按以下流程使用技能：
+
+```python
+import subprocess
+import os
+
+repo_root = get_repo_root()
+python_exe = get_python_exe()
+
+chattts_script = os.path.join(repo_root, "ChatTTS", "chattts_infer.py")
+rvc_script = os.path.join(repo_root, "RVC", "rvc_infer_json.py")
+feishu_script = os.path.join(repo_root, "scripts", "feishu_voice.py")
+
+# 1. 调用 ChatTTS 生成语音
+chat_result = subprocess.run(
+    [python_exe, chattts_script, "你好啊，今天天气真不错！"],
+    capture_output=True,
+    text=True,
+    cwd=repo_root
+)
+print(chat_result.stdout)
+
+# 2. 调用 RVC 变声（根据上一步输出的文件路径）
+# 假设上一步输出到 E:\tts_output\ChatTTS\chattts_raw_xxx.wav
+chat_output_wav = "...(从上一个命令输出中提取文件路径)..."
+
+rvc_result = subprocess.run(
+    [python_exe, rvc_script, chat_output_wav,
+     "--model", "guanguanV1.pth", "--pitch", "0"],
+    capture_output=True,
+    text=True,
+    cwd=repo_root
+)
+print(rvc_result.stdout)
+
+# 3. 发送飞书语音
+feishu_result = subprocess.run(
+    [python_exe, feishu_script, "--file", rvc_output_wav],
+    capture_output=True,
+    text=True,
+    cwd=repo_root
+)
+print(feishu_result.stdout)
+```
+
+### 第六步：遇到错误时的处理
+
+当技能出现任何错误时，Agent 应主动引导用户反馈：
+
+```
+🐛 抱歉，技能运行过程中遇到了问题！
+
+为了更好地解决这个情况，麻烦你到 GitHub 提交 Issue 反馈一下：
+https://github.com/jiuyou-dev/feishu-voice-skill/issues
+
+反馈时建议包含：
+- 问题描述（做了什么操作、出现了什么错误）
+- 错误日志（如果有的话）
+- 你的环境信息（操作系统、Python 版本等）
+
+我们会尽快跟进处理！感谢你的反馈～
 ```
 
 ---
@@ -356,7 +384,12 @@ pip install -r packages/rvc/requirements.txt
 
 ```python
 # 方式1: 使用联合推理管道 (推荐)
-from scripts.chattts_rvc_pipeline import ChatTTSRVCPipeline
+import sys
+import os
+
+repo_root = "<仓库根目录>"
+sys.path.insert(0, os.path.join(repo_root, "scripts"))
+from chattts_rvc_pipeline import ChatTTSRVCPipeline
 
 pipeline = ChatTTSRVCPipeline()
 pipeline.run(
@@ -365,7 +398,7 @@ pipeline.run(
 )
 
 # 方式2: 发送飞书语音消息
-from scripts.feishu_voice import send_voice_message
+from feishu_voice import send_voice_message
 
 send_voice_message(
     text="这是测试语音消息",
@@ -378,7 +411,12 @@ send_voice_message(
 
 ```python
 # Method 1: Use combined pipeline (Recommended)
-from scripts.chattts_rvc_pipeline import ChatTTSRVCPipeline
+import sys
+import os
+
+repo_root = "<repo_root>"
+sys.path.insert(0, os.path.join(repo_root, "scripts"))
+from chattts_rvc_pipeline import ChatTTSRVCPipeline
 
 pipeline = ChatTTSRVCPipeline()
 pipeline.run(
@@ -387,7 +425,7 @@ pipeline.run(
 )
 
 # Method 2: Send Feishu voice message
-from scripts.feishu_voice import send_voice_message
+from feishu_voice import send_voice_message
 
 send_voice_message(
     text="This is a test voice message",
@@ -400,17 +438,15 @@ send_voice_message(
 
 ```bash
 # 基本用法
-python packages/chatttts/chattts_infer.py --text "你好世界"
+python ChatTTS/chattts_infer.py "你好世界"
 
 # 指定参数
-python packages/chatttts/chattts_infer.py \
+python ChatTTS/chattts_infer.py \
     --text "今天天气真好" \
-    --output "test.wav" \
-    --temperature 0.8 \
-    --top_p 0.9
+    --output "test.wav"
 
 # RVC 转换
-python packages/rvc/rvc_infer_json.py \
+python RVC/rvc_infer_json.py \
     --input "chatttts_output.wav" \
     --model "guanguanV1.pth" \
     --output "final_output.wav"
@@ -432,40 +468,32 @@ python packages/rvc/rvc_infer_json.py \
 ## 项目结构 / Project Structure
 
 ```
-feishu-voice-skill/
+feishu-voice-skill/              ← 仓库根目录 (<repo_root>)
 │
-├── README.md                      # 主说明文件 / Main documentation
-├── README_CN.md                   # 中文说明文件 / Chinese documentation
-├── LICENSE                        # MIT 许可证
+├── README.md                    # 主说明文件 / Main documentation
+├── LICENSE                     # MIT 许可证
 │
-├── packages/                      # 核心代码包 / Core packages
-│   │
-│   ├── chatttts/                 # ChatTTS 源码包
-│   │   ├── ChatTTS/             # ChatTTS 核心实现
-│   │   │   ├── model/            # 模型定义
-│   │   │   ├── config/           # 配置
-│   │   │   └── utils/            # 工具函数
-│   │   ├── chattts_infer.py      # ChatTTS 推理脚本
-│   │   ├── params_chattts.json   # 默认参数
-│   │   ├── requirements.txt      # Python 依赖
-│   │   └── setup.py              # 安装脚本
-│   │
-│   └── rvc/                      # RVC 源码包
-│       ├── infer/                # 推理模块
-│       │   ├── modules/          # VC 模块
-│       │   └── lib/              # 核心库
-│       ├── assets/               # 资源文件
-│       │   ├── hubert/           # HuBERT 模型
-│       │   ├── rmvpe/            # RMVPE F0 提取器
-│       │   └── indices/          # 检索索引
-│       ├── configs/              # 配置文件
-│       ├── rvc_infer_json.py     # RVC 推理脚本
-│       └── requirements.txt      # Python 依赖
+├── ChatTTS/                   # ChatTTS 推理模块
+│   ├── chattts_infer.py       # ChatTTS 推理脚本
+│   └── params_chattts.json    # 默认参数
 │
-└── scripts/                      # 用户脚本 / User scripts
-    ├── chattts_rvc_pipeline.py   # 联合推理管道
-    ├── feishu_voice.py           # 飞书发送脚本
-    └── bilibili_top20_task.py    # B站热门任务
+├── RVC/                       # RVC 推理模块
+│   ├── rvc_infer_json.py      # RVC 推理脚本
+│   ├── params_rvc.json        # RVC 参数
+│   └── assets/                # 模型资源
+│       └── weights/           # RVC 模型权重
+│
+├── scripts/                   # 用户脚本
+│   ├── _python_resolver.py   # Python 路径自动解析（核心模块）
+│   ├── feishu_voice.py        # 飞书发送脚本
+│   └── check_environment.py   # 环境检查脚本
+│
+├── packages/                  # 原始包结构（参考）
+│   ├── chatttts/             # ChatTTS 官方包
+│   └── rvc/                  # RVC 官方包
+│
+└── python/                   # 内嵌 Python 环境（可选，不上传 Git）
+    └── python.exe             # Python 3.11.9
 ```
 
 ---
@@ -474,26 +502,12 @@ feishu-voice-skill/
 
 本项目使用了以下开源项目，遵循其相应的许可证：
 
-This project uses the following open source projects under their respective licenses:
-
 | 项目 / Project | 许可证 / License | 仓库 / Repository |
 |---------------|-----------------|------------------|
 | **ChatTTS** | BSD-3-Clause | https://github.com/2noise/ChatTTS |
-| **RVC** | MIT | https://github.com/liujing04/Retrieval-based-Voice-Conversion |
+| **RVC** | MIT | https://github.com/RVC-Project/Retrieval-Based-Voice-Conversion |
 | **PyTorch** | BSD-3-Clause | https://github.com/pytorch/pytorch |
 | **FFmpeg** | LGPL/GPL | https://ffmpeg.org/ |
-
-### ChatTTS 许可证声明
-
-ChatTTS 使用 BSD-3-Clause 许可证。本项目包含 ChatTTS 源码的副本，遵循其许可证条款。
-
-ChatTTS is licensed under BSD-3-Clause. This project includes a copy of ChatTTS source code, following its license terms.
-
-### RVC 许可证声明
-
-RVC 使用 MIT 许可证。本项目包含 RVC 源码的副本，遵循其许可证条款。
-
-RVC is licensed under MIT. This project includes a copy of RVC source code, following its license terms.
 
 ---
 
