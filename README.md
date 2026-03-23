@@ -191,7 +191,7 @@ pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
 
 | 环境变量 | 说明 | 默认值 |
 |----------|------|--------|
-| `TTS_OUTPUT_DIR` | TTS 输出根目录 | `E:\tts_output` |
+| `TTS_OUTPUT_DIR` | TTS 输出根目录（绝对路径或相对路径） | `<repo_root>/tts_output` |
 
 ---
 
