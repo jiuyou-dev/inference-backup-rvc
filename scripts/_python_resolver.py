@@ -1,19 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Python 解释器自动检测模块
-自动选择仓库内嵌 Python（推荐）或系统 Python（fallback）
+Python 解释器路径模块
+仅使用仓库内嵌 Python：<repo_root>/python/python.exe
 
 使用方法：
     from _python_resolver import get_python_exe, get_repo_root
 
     python_exe = get_python_exe()
     repo_root = get_repo_root()
-
-路径优先级：
-    1. {repo_root}/python/python.exe          ← 仓库内嵌 Python（推荐）
-    2. C:\\Espressif\\tools\\idf-python\\python.exe  ← 九幽工作区兼容
-    3. sys.executable                         ← 系统默认 Python
 """
 
 import os
@@ -31,9 +26,6 @@ REPO_ROOT = os.path.dirname(_SELF_DIR)  # 仓库根目录
 # 内嵌 Python 路径（相对于仓库根目录）
 EMBEDDED_PYTHON_REL = os.path.join("python", "python.exe")
 
-# 九幽工作区兼容路径（保持兼容，不推荐新用户使用）
-IDF_PYTHON_FALLBACK = r"C:\Espressif\tools\idf-python\python.exe"
-
 
 def get_repo_root():
     """获取仓库根目录"""
@@ -42,24 +34,17 @@ def get_repo_root():
 
 def get_python_exe():
     """
-    自动选择 Python 解释器
+    获取 Python 解释器路径
 
-    优先级：
-    1. {repo_root}/python/python.exe（仓库内嵌 Python）
-    2. C:\\Espressif\\tools\\idf-python\\python.exe（九幽工作区兼容）
-    3. sys.executable（系统默认 Python）
+    仅使用仓库内嵌 Python：<repo_root>/python/python.exe
     """
-    # 方案1：仓库内嵌 Python
     embedded_py = os.path.join(REPO_ROOT, EMBEDDED_PYTHON_REL)
-    if os.path.exists(embedded_py):
-        return embedded_py
-
-    # 方案2：九幽工作区 Python（兼容旧配置）
-    if os.path.exists(IDF_PYTHON_FALLBACK):
-        return IDF_PYTHON_FALLBACK
-
-    # 方案3：系统默认
-    return sys.executable
+    if not os.path.exists(embedded_py):
+        raise FileNotFoundError(
+            f"未找到仓库内嵌 Python：{embedded_py}\n"
+            "请确保 <仓库根目录>/python/python.exe 存在。"
+        )
+    return embedded_py
 
 
 def get_chattts_dir():
@@ -73,7 +58,7 @@ def get_rvc_dir():
 
 
 def get_output_dir():
-    """获取 TTS 输出目录（默认 E:\\tts_output，可通过环境变量覆盖）"""
+    """获取 TTS 输出目录（可通过环境变量 TTS_OUTPUT_DIR 覆盖）"""
     return os.environ.get("TTS_OUTPUT_DIR", r"E:\tts_output")
 
 
