@@ -1,14 +1,27 @@
 # RVC 推理备份仓库（WebUI 简化版）
 
 ## 开源项目
-**原项目地址：** https://github.com/RVC-Project/Retrieval-Based-Voice-Conversion  
+**原项目地址：** https://github.com/RVC-Project/Retrieval-Based-Voice-Conversion
 **许可证：** MIT License
 
 ---
 
-## 启动方式
+## WebUI 启动方式
 
-### 命令行推理
+```bash
+# 进入仓库目录
+cd inference-backup-rvc
+
+# 启动 RVC WebUI（端口 7860）
+python rvc_infer_only.py
+```
+
+启动后访问：**http://localhost:7860**
+
+---
+
+## 命令行推理启动方式
+
 ```bash
 python rvc_infer_json.py -i 输入音频.wav
 ```
@@ -21,12 +34,6 @@ run_rvc.bat
 # Linux/Mac
 bash run_rvc.sh
 ```
-
----
-
-## WebUI 启动
-
-本仓库提供了简化版推理脚本，如需完整图形界面请访问原项目。
 
 ---
 
